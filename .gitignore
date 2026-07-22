@@ -1,0 +1,22 @@
+# Environments
+venv/
+env/
+ENV/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Build / Distribution
+build/
+dist/
+*.spec
+Output/
+*.iss
+
+# Logs and Databases
+*.log
+*.sqlite3

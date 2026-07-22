@@ -1,0 +1,19 @@
+PyQt6==6.7.1
+# Build tool -- turns the source into ConvertDown.exe. This was previously
+# installed by hand outside this file, which is exactly why it silently
+# vanished when the venv got rebuilt from a clean requirements.txt install
+# during the markitdown dependency cleanup: nothing was tracking it. Pinned
+# here now so `pip install -r requirements.txt` alone is always enough to
+# rebuild a fully working venv, with no manual steps to remember.
+pyinstaller==6.21.0
+# Bumped from 0.0.1a2 (a very early pre-release) to the current stable line.
+# Note: markitdown restructured around 0.1.x into an extras-based install --
+# core install alone no longer bundles docx/pptx/xlsx support. Since this app
+# only needs those three plus the plain-text formats markitdown handles
+# unconditionally (html/csv/json/xml/txt), we pull in just those extras
+# rather than `markitdown[all]`, to keep the dependency/memory footprint
+# closer to what the project's targeting.
+markitdown[docx,pptx,xlsx]==0.1.6
+pymupdf4llm==0.0.11
+pytest==8.3.2
+psutil==6.0.0
