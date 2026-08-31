@@ -16,6 +16,13 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+def global_exception_handler(exctype, value, tb):
+    logger.critical("Uncaught exception in GUI:", exc_info=(exctype, value, tb))
+    # Still print to stderr if available
+    sys.__excepthook__(exctype, value, tb)
+
+sys.excepthook = global_exception_handler
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLabel, QTableWidget, QTableWidgetItem, QFileDialog,
@@ -293,7 +300,7 @@ LIGHT_STYLESHEET = """
 class MarkdownConverterApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("ConvertDown")
+        self.setWindowTitle("DesktopMarkdownConverter")
         self.resize(900, 600)
         self.setAcceptDrops(True)
 
@@ -360,8 +367,8 @@ class MarkdownConverterApp(QMainWindow):
     def show_about_dialog(self):
         QMessageBox.about(
             self,
-            "About ConvertDown",
-            "<h3>ConvertDown</h3>"
+            "About DesktopMarkdownConverter",
+            "<h3>DesktopMarkdownConverter</h3>"
             "<p>Converts PDF, DOCX, XLSX, PPTX, HTML, CSV, JSON, XML, and TXT "
             "files to Markdown.</p>"
             "<p>PDFs are processed with pymupdf4llm; other formats with "
@@ -543,23 +550,33 @@ class MarkdownConverterApp(QMainWindow):
     def add_folder_dialog(self):
         # QFileDialog.getExistingDirectory() uses the native Windows "Browse
         # For Folder" dialog by default, which never lists files -- that's a
-        # Windows shell limitation, not something we can configure away while
-        # using the native picker. Building the dialog manually with
+        # Windows shell limitation. Building the dialog manually with
         # DontUseNativeDialog + ShowDirsOnly(False) switches to Qt's own
-        # directory dialog, which lists files alongside folders (grayed out,
-        # not selectable) so you can see what's actually in a folder before
-        # committing to it. Folder selection itself still works the normal
-        # way: whichever subfolder is highlighted when you hit "Choose" gets
-        # selected, or the currently open folder if nothing is highlighted.
+        # directory dialog, which lists files alongside folders so the user
+        # can see what's actually in a folder before committing to it.
         dialog = QFileDialog(self, "Select Folder to Convert")
+        dialog.setOption(QFileDialog.Option.DontUseNativeDialog, True)
         dialog.setFileMode(QFileDialog.FileMode.Directory)
         dialog.setOption(QFileDialog.Option.ShowDirsOnly, False)
-        dialog.setOption(QFileDialog.Option.DontUseNativeDialog, True)
+        
+        start_dir = str(self.output_dir) if self.output_dir else str(Path.cwd())
+        dialog.setDirectory(start_dir)
 
         if dialog.exec():
             selected = dialog.selectedFiles()
+            target_folder = None
             if selected:
-                self._process_folder(Path(selected[0]))
+                p = Path(selected[0])
+                if p.is_file():
+                    target_folder = p.parent
+                elif p.is_dir():
+                    target_folder = p
+            
+            if not target_folder:
+                target_folder = Path(dialog.directory().absolutePath())
+                
+            if target_folder and target_folder.is_dir():
+                self._process_folder(target_folder)
 
     def _process_folder(self, folder_path: Path):
         """Scan a folder, ask about subfolders, filter by supported types, and show summary."""
@@ -642,6 +659,7 @@ class MarkdownConverterApp(QMainWindow):
         self.table.setRowCount(0)
         self.progress_bar.setValue(0)
         self.lbl_processed.setText("Processed: 0")
+        self.lbl_total_files.setText("Total Files: 0")
 
     def start_conversion(self):
         if self.table.rowCount() == 0:
@@ -656,9 +674,12 @@ class MarkdownConverterApp(QMainWindow):
 
         files_to_process = []
         for row in range(self.table.rowCount()):
-            if self.table.item(row, 2).text() != "Done":
-                file_path = Path(self.table.item(row, 0).data(Qt.ItemDataRole.UserRole))
-                files_to_process.append(file_path)
+            status_item = self.table.item(row, 2)
+            name_item = self.table.item(row, 0)
+            if name_item and (status_item is None or status_item.text() != "Done"):
+                file_path_str = name_item.data(Qt.ItemDataRole.UserRole)
+                if file_path_str:
+                    files_to_process.append(Path(file_path_str))
 
         if not files_to_process:
             QMessageBox.information(self, "Info", "All files are already processed!")
@@ -684,11 +705,10 @@ class MarkdownConverterApp(QMainWindow):
     def find_row_by_filepath(self, filepath: str) -> int:
         """Match rows by the full path stored in UserRole, not the display
         name. Two queued files can share the same filename if they came from
-        different folders (a likely scenario given the "Add Folder +
-        subfolders" workflow); matching on name alone would silently update
-        the wrong row's status."""
+        different folders."""
         for row in range(self.table.rowCount()):
-            if self.table.item(row, 0).data(Qt.ItemDataRole.UserRole) == filepath:
+            item = self.table.item(row, 0)
+            if item and item.data(Qt.ItemDataRole.UserRole) == filepath:
                 return row
         return -1
 
@@ -696,40 +716,59 @@ class MarkdownConverterApp(QMainWindow):
         self.progress_bar.setValue(percent)
         row = self.find_row_by_filepath(file_key)
         if row != -1:
-            self.table.item(row, 2).setText(status)
+            item = self.table.item(row, 2)
+            if item:
+                item.setText(status)
+            else:
+                self.table.setItem(row, 2, QTableWidgetItem(status))
             if output_path:
                 self.table.setItem(row, 3, QTableWidgetItem(output_path))
 
     def on_file_finished(self, file_key: str, status: str, output_path: str):
         row = self.find_row_by_filepath(file_key)
         if row != -1:
-            self.table.item(row, 2).setText(status)
+            item = self.table.item(row, 2)
+            if item:
+                item.setText(status)
+            else:
+                self.table.setItem(row, 2, QTableWidgetItem(status))
             if output_path:
                 self.table.setItem(row, 3, QTableWidgetItem(output_path))
                 
         # Update Processed count safely
-        current_processed = int(self.lbl_processed.text().split(":")[1].strip())
-        self.lbl_processed.setText(f"Processed: {current_processed + 1}")
+        try:
+            current_processed = int(self.lbl_processed.text().split(":")[1].strip())
+            self.lbl_processed.setText(f"Processed: {current_processed + 1}")
+        except Exception:
+            pass
 
     def on_error(self, file_key: str, error_msg: str):
         row = self.find_row_by_filepath(file_key)
         if row != -1:
-            self.table.item(row, 2).setText("Error")
-            # We could show error_msg in output path column as a tooltip
-            item = QTableWidgetItem("Failed")
-            item.setToolTip(error_msg)
-            self.table.setItem(row, 3, item)
+            item = self.table.item(row, 2)
+            if item:
+                item.setText("Error")
+            else:
+                self.table.setItem(row, 2, QTableWidgetItem("Error"))
+            err_item = QTableWidgetItem("Failed: " + str(error_msg)[:60])
+            err_item.setToolTip(str(error_msg))
+            self.table.setItem(row, 3, err_item)
 
-    def on_batch_finished(self, success_count: int, fail_count: int):
+    def on_batch_finished(self, success_count: int, fail_count: int, was_cancelled: bool = False):
         self.btn_start.setText("Start Conversion")
         self.btn_start.setEnabled(True)
         self.btn_start.setStyleSheet("") # Reset style
         self.apply_styles() # Re-apply base styles safely
         
-        self.progress_bar.setValue(100)
-        
-        msg = f"Conversion finished!\nSuccess: {success_count}\nFailed: {fail_count}"
-        QMessageBox.information(self, "Batch Complete", msg)
+        if was_cancelled:
+            QMessageBox.information(
+                self, "Conversion Cancelled",
+                f"Conversion was cancelled by user.\nCompleted: {success_count}\nFailed/Cancelled: {fail_count}"
+            )
+        else:
+            self.progress_bar.setValue(100)
+            msg = f"Conversion finished!\nSuccess: {success_count}\nFailed: {fail_count}"
+            QMessageBox.information(self, "Batch Complete", msg)
 
 
 if __name__ == "__main__":

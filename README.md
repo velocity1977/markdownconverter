@@ -1,10 +1,10 @@
-# ConvertDown
+# DesktopMarkdownConverter
 
-**ConvertDown** is a standalone, GUI-based Windows utility designed to help general users easily convert documents and data files into Markdown format. 
+**DesktopMarkdownConverter** is a standalone, GUI-based Windows utility designed to help general users easily convert documents and data files into Markdown format. 
 
 **Objective:** The primary goal is to provide a simple, drag-and-drop interface for users who need Markdown conversions but do not want to interact with command-line tools or write code. While the conversion is not perfect and has limitations with highly complex document layouts, it works reliably for the vast majority of standard use cases.
 
-**Licensing Note:** This project uses [pymupdf4llm](https://github.com/pymupdf/pymupdf4llm) for PDF conversions. `pymupdf4llm` (and its underlying `PyMuPDF` library) is strictly licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](https://github.com/pymupdf/PyMuPDF/blob/main/LICENSE). In compliance with the AGPL requirements regarding derivative works and distribution, the complete source code for ConvertDown is open-sourced and published in this repository.
+**Licensing Note:** This project uses [pymupdf4llm](https://github.com/pymupdf/pymupdf4llm) for PDF conversions. `pymupdf4llm` (and its underlying `PyMuPDF` library) is strictly licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](https://github.com/pymupdf/PyMuPDF/blob/main/LICENSE). In compliance with the AGPL requirements regarding derivative works and distribution, the complete source code for DesktopMarkdownConverter is open-sourced and published in this repository.
 
 ## Supported Formats
 * **PDF** (via `pymupdf4llm`)
@@ -48,12 +48,12 @@ If you need to distribute the application as a standalone executable:
 1. **Build the Application:**
    Compile the source into an executable directory using PyInstaller.
    ```bash
-   pyinstaller ConvertDown.spec
+   pyinstaller DesktopMarkdownConverter.spec
    ```
-   This will output the build to the `dist/ConvertDown` directory.
+   This will output the build to the `dist/DesktopMarkdownConverter` directory.
 
 2. **Create the Installer:**
-   An Inno Setup script (`setup.iss`) is included in the repository. Open the script with [Inno Setup](https://jrsoftware.org/isinfo.php) and compile it to generate a `ConvertDown_Setup.exe` installer.
+   An Inno Setup script (`setup.iss`) is included in the repository. Open the script with [Inno Setup](https://jrsoftware.org/isinfo.php) and compile it to generate a `DesktopMarkdownConverter_Setup.exe` installer.
 
 ## Built With
 * [PyQt6](https://pypi.org/project/PyQt6/) - UI Framework

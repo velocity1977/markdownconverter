@@ -12,7 +12,7 @@ class SmartRouter:
     def __init__(self):
         # Initialize the converters once to reuse them
         self.markitdown_converter = MarkItDownConverter()
-        self.pdf_converter = PyMuPDFConverter(chunk_size=15)
+        self.pdf_converter = PyMuPDFConverter(chunk_size=50)
         
         # Mapping of extensions to their respective converter
         self.extension_map = {
@@ -49,6 +49,7 @@ class SmartRouter:
         include_images: bool = False,
         include_formulae: bool = False,
         pdf_password: str = "",
+        cancel_check: Optional[Callable[[], bool]] = None,
     ) -> bool:
         """
         Determine the converter and process the file.
@@ -65,4 +66,5 @@ class SmartRouter:
             include_images=include_images,
             include_formulae=include_formulae,
             pdf_password=pdf_password,
+            cancel_check=cancel_check,
         )
