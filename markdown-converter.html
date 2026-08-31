@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desktop Markdown Converter — Native Windows Document Engine</title>
+  <meta name="description" content="A fast, distraction-free desktop utility for Windows. Converts PDF, Office docs, spreadsheets, and data into clean, LLM-ready Markdown entirely on your local machine.">
+  
+  <!-- Modern Font Stack -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #090a0e;
+      --bg-surface: #10131a;
+      --bg-surface-raised: #161b24;
+      --bg-surface-active: #1d2330;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --text: #f0f3f8;
+      --text-muted: #8e97a8;
+      --text-faint: #535d6e;
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.15);
+      --accent-cyan: #06b6d4;
+      --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        radial-gradient(ellipse 70% 45% at 50% -10%, rgba(16, 185, 129, 0.14), transparent 75%);
+      background-size: 24px 24px, 100% 100%;
+      background-position: 0 0, 0 0;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Top Utility Bar */
+    .top-bar {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(9, 10, 14, 0.85);
+    }
+
+    .top-bar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-glyph {
+      width: 26px;
+      height: 26px;
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .nav-actions a:hover {
+      color: var(--text);
+    }
+
+    .pill-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .pill-link:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 85px 0 50px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px 5px 8px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #6ee7b7;
+      margin-bottom: 24px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5.2vw, 4.1rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.035em;
+      margin-bottom: 22px;
+      color: #fff;
+    }
+
+    .hero h1 span.dim {
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 660px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+
+    .cta-button-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #f0f2f5;
+      color: #090a0d;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 13px 26px;
+      border-radius: var(--radius);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.4), 0 12px 24px -6px rgba(0,0,0,0.5);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .btn-download:hover {
+      background: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 1px #fff, 0 16px 32px -8px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface-raised);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 13px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      transition: all 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-surface-active);
+      border-color: var(--border-strong);
+    }
+
+    .release-meta {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--text-faint);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Interactive Live Workbench Simulator */
+    .workbench-wrap {
+      margin: 30px 0 80px;
+      position: relative;
+    }
+
+    .corner-cross {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .cross-tl { top: -10px; left: -10px; }
+    .cross-tr { top: -10px; right: -10px; }
+    .cross-bl { bottom: -10px; left: -10px; }
+    .cross-br { bottom: -10px; right: -10px; }
+
+    .workbench {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+    }
+
+    /* Window Chrome */
+    .win-header {
+      background: #0d0f15;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .win-controls {
+      display: flex;
+      gap: 7px;
+    }
+
+    .win-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #232733;
+    }
+
+    .win-title {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .win-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg);
+      padding: 3px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 5px 11px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: var(--bg-surface-raised);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* Workbench Body */
+    .workbench-body {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      min-height: 420px;
+      background: #0b0d13;
+    }
+
+    @media (max-width: 900px) {
+      .workbench-body { grid-template-columns: 1fr; }
+    }
+
+    /* Left: Queue & Inspect Pane */
+    .pane-left {
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: #0d1017;
+    }
+
+    .pane-header-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-faint);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .file-item-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+
+    .file-item-card.active {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.04);
+    }
+
+    .file-details {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ext-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #1e2230;
+      color: #93c5fd;
+    }
+
+    .ext-badge.pdf { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+    .ext-badge.docx { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+    .ext-badge.xlsx { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; }
+    .ext-badge.pptx { background: rgba(249, 115, 22, 0.15); color: #fdba74; }
+
+    .file-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .file-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .file-status-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Live Pipeline Toggles */
+    .pipeline-toggles {
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .toggle-row span.on {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-convert-trigger {
+      width: 100%;
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-convert-trigger:hover {
+      background: var(--bg-surface-active);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Right: Markdown Stream Preview */
+    .pane-right {
+      padding: 20px;
+      background: #090a0e;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .md-code-box {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: #d1d5db;
+      overflow-x: auto;
+      white-space: pre;
+      min-height: 280px;
+    }
+
+    .md-code-box .token-h { color: #f43f5e; font-weight: 600; }
+    .md-code-box .token-link { color: #38bdf8; }
+    .md-code-box .token-table { color: #34d399; }
+    .md-code-box .token-math { color: #fbbf24; }
+    .md-code-box .token-meta { color: #6b7280; font-style: italic; }
+
+    .pane-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+
+    .btn-copy {
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-copy:hover {
+      background: var(--bg-surface-active);
+      color: #fff;
+    }
+
+    /* Core Principles (No BS Grid) */
+    .section-divider {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+      margin: 80px 0;
+    }
+
+    .section-title-wrap {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title-wrap h2 {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .section-title-wrap p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 80px;
+    }
+
+    .spec-cell {
+      background: var(--bg-surface);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: background 0.15s ease;
+    }
+
+    .spec-cell:hover {
+      background: #131720;
+    }
+
+    .spec-glyph {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .spec-cell h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .spec-cell p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Engine Comparison / Format Matrix */
+    .formats-matrix {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 80px;
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 16px;
+    }
+
+    .matrix-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-faint);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .matrix-table td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text-muted);
+    }
+
+    .matrix-table tr:hover td {
+      background: rgba(255, 255, 255, 0.015);
+      color: var(--text);
+    }
+
+    .matrix-table td.primary {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tag-engine {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border);
+      color: #94a3b8;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      margin-bottom: 80px;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .faq-grid { grid-template-columns: 1fr; }
+    }
+
+    .faq-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .faq-card h4 {
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .faq-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* License & Architecture Footer Note */
+    .open-source-banner {
+      background: linear-gradient(180deg, var(--bg-surface) 0%, #090a0e 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .open-source-banner h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .open-source-banner p {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    /* Simple Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 0;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-faint);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      margin-left: 20px;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-bar">
+    <div class="container top-bar-inner">
+      <a href="index.html" class="brand-mark">
+        <div class="brand-glyph">MD</div>
+        <span>Sombrero / DesktopMarkdownConverter</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="index.html">← Back to Hub</a>
+        <a href="https://github.com/velocity1977/markdownconverter" target="_blank" rel="noopener" class="pill-link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          velocity1977/markdownconverter
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Refined Hero Section -->
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span class="status-dot"></span>
+        <span>STANDALONE WINDOWS UTILITY • ZERO CLOUD TELEMETRY</span>
+      </div>
+
+      <h1>
+        The missing document-to-Markdown<br>
+        <span class="dim">engine for Windows.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Feed it locked PDFs, Word docs, slide decks, and spreadsheets. It parses layouts, extracts figures into local asset folders, repairs broken math glyphs, and hands you pristine Markdown ready for LLMs or Obsidian — 100% offline.
+      </p>
+
+      <div class="hero-cta">
+        <div class="cta-button-cluster">
+          <!-- OFFICIAL GITHUB V1.0 DIRECT RELEASE DOWNLOAD -->
+          <a href="https://github.com/velocity1977/markdownconverter/releases/download/V1.0/DesktopMarkdownConverter.exe" id="downloadBtn" class="btn-download" download>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download for Windows (.exe)
+          </a>
+
+          <a href="https://github.com/velocity1977/markdownconverter/releases/tag/V1.0" target="_blank" rel="noopener" class="btn-secondary">
+            Release Notes (v1.0)
+          </a>
+        </div>
+
+        <div class="release-meta">
+          <span>x64 Architecture</span>
+          <span>•</span>
+          <span>Windows 10 / 11</span>
+          <span>•</span>
+          <span>v1.0 Standalone (~22.6 MB)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Live Workbench Demonstration -->
+    <div class="workbench-wrap">
+      <div class="corner-cross cross-tl">+</div>
+      <div class="corner-cross cross-tr">+</div>
+      <div class="corner-cross cross-bl">+</div>
+      <div class="corner-cross cross-br">+</div>
+
+      <div class="workbench">
+        <!-- Window Chrome -->
+        <div class="win-header">
+          <div class="win-controls">
+            <div class="win-dot"></div>
+            <div class="win-dot"></div>
+            <div class="win-dot"></div>
+          </div>
+          <div class="win-title">
+            <span>DesktopMarkdownConverter.exe</span>
+            <span style="color:var(--text-faint)">— [Active Conversion Pipeline]</span>
+          </div>
+          <div class="win-tabs">
+            <button class="tab-btn active" onclick="switchSample('pdf')">Financial_Q3.pdf</button>
+            <button class="tab-btn" onclick="switchSample('docx')">System_Arch.docx</button>
+            <button class="tab-btn" onclick="switchSample('pptx')">Pitch_Deck.pptx</button>
+            <button class="tab-btn" onclick="switchSample('xlsx')">Metrics_2026.xlsx</button>
+          </div>
+        </div>
+
+        <!-- Workbench Body -->
+        <div class="workbench-body">
+          <!-- Left: Input Queue & Options -->
+          <div class="pane-left">
+            <div class="pane-header-title">
+              <span>Conversion Queue</span>
+              <span id="queueCount">4 Files Loaded</span>
+            </div>
+
+            <div class="file-item-card active" id="activeFileCard">
+              <div class="file-details">
+                <span class="ext-badge pdf" id="fileExtBadge">PDF</span>
+                <div>
+                  <div class="file-name" id="fileNameLabel">Financial_Q3_Report.pdf</div>
+                  <div class="file-meta" id="fileMetaLabel">14 pages • 2.4 MB</div>
+                </div>
+              </div>
+              <div class="file-status-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Ready</span>
+              </div>
+            </div>
+
+            <div class="pipeline-toggles">
+              <div class="toggle-row">
+                <span>Extract Figures:</span>
+                <span class="on">[✓] _assets/</span>
+              </div>
+              <div class="toggle-row">
+                <span>Symbol Repair:</span>
+                <span class="on">[✓] PUA → UTF-8</span>
+              </div>
+              <div class="toggle-row">
+                <span>Engine:</span>
+                <span class="on" id="activeEngineLabel">pymupdf4llm</span>
+              </div>
+              <div class="toggle-row">
+                <span>Network:</span>
+                <span style="color:#ef4444;font-weight:600">0.0 KB (Airgapped)</span>
+              </div>
+            </div>
+
+            <button class="btn-convert-trigger" onclick="simulateConvert()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              <span id="convertBtnLabel">Re-Run Conversion</span>
+            </button>
+
+            <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint); margin-top:auto;">
+              Target: <span style="color:var(--text-muted)">./Converted_Markdown/</span>
+            </div>
+          </div>
+
+          <!-- Right: Real Markdown Preview Stream -->
+          <div class="pane-right">
+            <div class="pane-header-title">
+              <span>Generated Markdown Stream</span>
+              <span style="color:var(--accent)" id="fidelityBadge">100% Structural Fidelity</span>
+            </div>
+
+            <div class="md-code-box" id="mdOutput">
+<span class="token-h"># Q3 2026 Executive Performance Summary</span>
+
+<span class="token-meta">*(Extracted 3 embedded charts into `Financial_Q3_Report_assets/`)*</span>
+
+<span class="token-h">## Key Revenue Metrics</span>
+| Department | Target (USD) | Actual (USD) | Delta (%) |
+| :--- | :--- | :--- | :--- |
+| Cloud Infrastructure | $14,200,000 | $15,840,000 | <span class="token-table">+11.5%</span> |
+| Developer Tooling | $6,100,000 | $6,450,000 | <span class="token-table">+5.7%</span> |
+| Professional Services| $2,400,000 | $2,180,000 | <span style="color:#f87171">-9.1%</span> |
+
+<span class="token-h">### Variance Analysis</span>
+![Q3 Revenue Distribution Chart](Financial_Q3_Report_assets/figure_1.png)
+
+Legacy symbol font equations successfully normalized:
+<span class="token-math">$$\Delta E = \sum_{i=1}^{n} \left( \alpha_i \cdot \sqrt{\beta_i} \right) \pm \epsilon$$</span>
+            </div>
+
+            <div class="pane-footer">
+              <span style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);" id="tokenEstimate">
+                ~284 tokens • 4 tables extracted
+              </span>
+              <button class="btn-copy" onclick="copySnippet()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span id="copyBtnText">Copy Markdown</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Specs Grid (No Fluff) -->
+    <div class="section-title-wrap">
+      <h2>Engineering Principles</h2>
+      <p>Built for users who care about data isolation, layout fidelity, and deterministic output.</p>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-cell">
+        <div>
+          <div class="spec-glyph">01 / AIRGAPPED INTEGRITY</div>
+          <h3>Zero Network Footprint</h3>
+          <p>Operates in complete offline isolation. No phone-home telemetry, no remote API calls, and zero bytes uploaded to third-party cloud infrastructure.</p>
+        </div>
+      </div>
+
+      <div class="spec-cell">
+        <div>
+          <div class="spec-glyph">02 / ASSET DECOUPLING</div>
+          <h3>Figure &amp; Image Isolation</h3>
+          <p>Embedded vectors and raster bitmaps in PDFs, Word docs, and PowerPoint slides are extracted directly into a sibling <code>_assets</code> folder and automatically linked.</p>
+        </div>
+      </div>
+
+      <div class="spec-cell">
+        <div>
+          <div class="spec-glyph">03 / HEURISTIC REPAIR</div>
+          <h3>Symbol Font Normalization</h3>
+          <p>Translates legacy PDF Private-Use-Area (PUA) symbol glyphs (e.g. angle marks, Greek letters, math operators) into compliant UTF-8 characters.</p>
+        </div>
+      </div>
+
+      <div class="spec-cell">
+        <div>
+          <div class="spec-glyph">04 / ASYNC WORKERS</div>
+          <h3>Folder &amp; Queue Processing</h3>
+          <p>Queue hundreds of documents or point directly at recursive directory trees. PyQt6 background QThread workers keep the interface fluid and responsive.</p>
+        </div>
+      </div>
+
+      <div class="spec-cell">
+        <div>
+          <div class="spec-glyph">05 / BATCH DECRYPTION</div>
+          <h3>Password-Protected PDFs</h3>
+          <p>Supply a session passphrase to decrypt and convert password-secured documents across your entire queue in a single unattended pass.</p>
+        </div>
+      </div>
+
+      <div class="spec-cell">
+        <div>
+          <div class="spec-glyph">06 / DESKTOP NATIVE</div>
+          <h3>OS Theme Synchronization</h3>
+          <p>Queries Windows DWM and Registry personalization APIs at startup to seamlessly match your system Light or Dark mode with native title bar tinting.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Format Engine Matrix -->
+    <section class="formats-matrix">
+      <div class="section-title-wrap" style="text-align: left; margin-bottom: 16px;">
+        <h2>Underlying Parsing Runtime</h2>
+        <p>Composing battle-tested document engines for maximum layout accuracy.</p>
+      </div>
+
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Format</th>
+            <th>Extensions</th>
+            <th>Engine</th>
+            <th>Extraction Capabilities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="primary">Adobe Portable Document</td>
+            <td><code>.pdf</code></td>
+            <td><span class="tag-engine">pymupdf4llm</span></td>
+            <td>Text hierarchy, multi-column tables, vector graphics, image assets, symbol repair</td>
+          </tr>
+          <tr>
+            <td class="primary">Microsoft Word</td>
+            <td><code>.docx</code></td>
+            <td><span class="tag-engine">microsoft/markitdown</span></td>
+            <td>Headings, inline code, nested tables, embedded media, lists</td>
+          </tr>
+          <tr>
+            <td class="primary">Microsoft PowerPoint</td>
+            <td><code>.pptx</code></td>
+            <td><span class="tag-engine">microsoft/markitdown</span></td>
+            <td>Slide structures, speaker notes, extracted shapes &amp; diagrams</td>
+          </tr>
+          <tr>
+            <td class="primary">Microsoft Excel</td>
+            <td><code>.xlsx</code></td>
+            <td><span class="tag-engine">microsoft/markitdown</span></td>
+            <td>Worksheet tables, formatted cell grids, CSV tabular conversion</td>
+          </tr>
+          <tr>
+            <td class="primary">Web &amp; Structured Data</td>
+            <td><code>.html</code>, <code>.csv</code>, <code>.json</code>, <code>.xml</code>, <code>.txt</code></td>
+            <td><span class="tag-engine">markitdown + native</span></td>
+            <td>DOM cleaning, JSON code blocks, tabular markdown tables</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Technical FAQ -->
+    <section class="faq-section">
+      <div class="section-title-wrap">
+        <h2>Frequently Asked Questions</h2>
+        <p>Straightforward answers about licensing, security, and formats.</p>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-card">
+          <h4>Does any document data leave my machine?</h4>
+          <p>No. Conversions run 100% locally on your CPU using bundled Python parsing runtimes. The application has zero outbound network requests and no analytics telemetry.</p>
+        </div>
+
+        <div class="faq-card">
+          <h4>Where do extracted images get saved?</h4>
+          <p>When "Extract Figures" is enabled, graphics and photos are saved in a subfolder named <code>&lt;filename&gt;_assets/</code> alongside your generated <code>.md</code> file.</p>
+        </div>
+
+        <div class="faq-card">
+          <h4>How does it handle password-protected PDFs?</h4>
+          <p>Enter the passphrase into the "PDF Password" input in the application before clicking convert. The engine will attempt unlocking each encrypted file in your batch.</p>
+        </div>
+
+        <div class="faq-card">
+          <h4>Why is this open-sourced under AGPL-3.0?</h4>
+          <p>The PDF conversion backend utilizes <code>pymupdf4llm</code> (and underlying <code>PyMuPDF</code>), which is licensed under GNU AGPLv3. We fully open-source our codebase in strict compliance.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGPLv3 Notice Banner -->
+    <div class="open-source-banner">
+      <h3>Strict AGPL-3.0 Open Source Compliance</h3>
+      <p>
+        Desktop Markdown Converter is free and open source. Full source code, PyInstaller specs, and Inno Setup build configurations are publicly available.
+      </p>
+      <a href="https://github.com/velocity1977/markdownconverter" target="_blank" rel="noopener" class="pill-link">
+        Browse Source Code on GitHub →
+      </a>
+    </div>
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <span>Sombrero</span> / <span>DesktopMarkdownConverter</span> • 2026
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Sombrero Home</a>
+        <a href="https://github.com/velocity1977/markdownconverter" target="_blank" rel="noopener">GitHub Repository</a>
+        <a href="https://github.com/velocity1977/markdownconverter/blob/main/LICENSE" target="_blank" rel="noopener">AGPLv3 License</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Demo Logic -->
+  <script>
+    const samples = {
+      pdf: {
+        ext: 'PDF',
+        badgeClass: 'pdf',
+        name: 'Financial_Q3_Report.pdf',
+        meta: '14 pages • 2.4 MB',
+        engine: 'pymupdf4llm',
+        tokens: '~284 tokens • 4 tables extracted',
+        code: `<span class="token-h"># Q3 2026 Executive Performance Summary</span>
+
+<span class="token-meta">*(Extracted 3 embedded charts into \`Financial_Q3_Report_assets/\`)*</span>
+
+<span class="token-h">## Key Revenue Metrics</span>
+| Department | Target (USD) | Actual (USD) | Delta (%) |
+| :--- | :--- | :--- | :--- |
+| Cloud Infrastructure | $14,200,000 | $15,840,000 | <span class="token-table">+11.5%</span> |
+| Developer Tooling | $6,100,000 | $6,450,000 | <span class="token-table">+5.7%</span> |
+| Professional Services| $2,400,000 | $2,180,000 | <span style="color:#f87171">-9.1%</span> |
+
+<span class="token-h">### Variance Analysis</span>
+![Q3 Revenue Distribution Chart](Financial_Q3_Report_assets/figure_1.png)
+
+Legacy symbol font equations successfully normalized:
+<span class="token-math">$$\\Delta E = \\sum_{i=1}^{n} \\left( \\alpha_i \\cdot \\sqrt{\\beta_i} \\right) \\pm \\epsilon$$</span>`
+      },
+      docx: {
+        ext: 'DOCX',
+        badgeClass: 'docx',
+        name: 'System_Architecture_v4.docx',
+        meta: '8 sections • 420 KB',
+        engine: 'microsoft/markitdown',
+        tokens: '~190 tokens • 2 diagrams extracted',
+        code: `<span class="token-h"># Distributed Storage Architecture Specification</span>
+
+<span class="token-h">## 1. Node Topology</span>
+* **Coordinator Nodes**: Raft consensus quorum with 3 replicas.
+* **Worker Shards**: Ephemeral workers holding partitioned hash rings.
+
+<span class="token-h">## 2. Event Ingestion Pipeline</span>
+\`\`\`rust
+pub async fn ingest_event(payload: Chunk) -> Result<Ack, StorageError> {
+    let hash = calculate_xxh3(&payload);
+    ring.route(hash).await
+}
+\`\`\`
+
+![High Level Data Flow Diagram](System_Architecture_assets/figure_1.png)`
+      },
+      pptx: {
+        ext: 'PPTX',
+        badgeClass: 'pptx',
+        name: 'Product_Roadmap_2026.pptx',
+        meta: '18 slides • 5.1 MB',
+        engine: 'microsoft/markitdown',
+        tokens: '~310 tokens • 8 slide graphics extracted',
+        code: `<span class="token-h"># Slide 1: Product Strategy 2026</span>
+**Presenter:** Platform Engineering Team  
+**Objective:** Migrate legacy ingestion pipelines to asynchronous edge workers.
+
+---
+<span class="token-h"># Slide 2: Milestones &amp; Timelines</span>
+* **Q1:** Zero-copy memory buffer protocol rollout.
+* **Q2:** Standalone desktop tooling release for enterprise airgapped nodes.
+* **Q3:** Sub-millisecond vector index search integration.
+
+![Roadmap Diagram](Product_Roadmap_assets/slide_2_diagram.png)`
+      },
+      xlsx: {
+        ext: 'XLSX',
+        badgeClass: 'xlsx',
+        name: 'Cluster_Metrics_Aug2026.xlsx',
+        meta: '3 worksheets • 85 KB',
+        engine: 'microsoft/markitdown',
+        tokens: '~165 tokens • Clean Markdown table generated',
+        code: `<span class="token-h"># Sheet 1: Node Cluster Telemetry</span>
+
+| Node ID | Region | CPU Util (%) | Memory Util (%) | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| \`iad-node-01\` | us-east-4 | 42.1% | 68.4% | <span class="token-table">HEALTHY</span> |
+| \`iad-node-02\` | us-east-4 | 88.7% | 91.2% | <span style="color:#fbbf24">ELEVATED</span> |
+| \`fra-node-01\` | eu-central-1 | 31.4% | 45.0% | <span class="token-table">HEALTHY</span> |
+| \`sin-node-01\` | ap-southeast-1 | 18.9% | 34.2% | <span class="token-table">HEALTHY</span> |`
+      }
+    };
+
+    let currentSample = 'pdf';
+
+    function switchSample(type) {
+      currentSample = type;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const data = samples[type];
+      const badge = document.getElementById('fileExtBadge');
+      badge.textContent = data.ext;
+      badge.className = 'ext-badge ' + data.badgeClass;
+      
+      document.getElementById('fileNameLabel').textContent = data.name;
+      document.getElementById('fileMetaLabel').textContent = data.meta;
+      document.getElementById('activeEngineLabel').textContent = data.engine;
+      document.getElementById('mdOutput').innerHTML = data.code;
+      document.getElementById('tokenEstimate').textContent = data.tokens;
+    }
+
+    function simulateConvert() {
+      const btn = document.getElementById('convertBtnLabel');
+      const box = document.getElementById('mdOutput');
+      const oldCode = box.innerHTML;
+      
+      btn.textContent = 'Processing Pipeline...';
+      box.style.opacity = '0.3';
+      
+      setTimeout(() => {
+        box.style.opacity = '1';
+        btn.textContent = 'Re-Run Conversion';
+      }, 350);
+    }
+
+    function copySnippet() {
+      const codeElement = document.getElementById('mdOutput');
+      const textToCopy = codeElement.innerText;
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        btnText.textContent = 'Copied to Clipboard!';
+        setTimeout(() => {
+          btnText.textContent = 'Copy Markdown';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
