@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Desktop Markdown Converter — Native Windows Document Engine</title>
+  <title>Desktop Markdown Converter — A Sombrero Green Room Tool</title>
   <meta name="description" content="A fast, distraction-free desktop utility for Windows. Converts PDF, Office docs, spreadsheets, and data into clean, LLM-ready Markdown entirely on your local machine.">
   
   <!-- Google tag (gtag.js) -->
@@ -19,7 +19,7 @@
   <!-- Modern Font Stack -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -33,7 +33,6 @@
       --text-muted: #8e97a8;
       --text-faint: #535d6e;
       --accent: #10b981;
-      --accent-glow: rgba(16, 185, 129, 0.15);
       --accent-cyan: #06b6d4;
       --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
       --font-body: 'Inter', system-ui, sans-serif;
@@ -72,7 +71,7 @@
     }
 
     .container {
-      max-width: 1120px;
+      max-width: 1060px;
       margin: 0 auto;
       padding: 0 24px;
     }
@@ -80,7 +79,7 @@
     /* Top Utility Bar */
     .top-bar {
       border-bottom: 1px solid var(--border);
-      padding: 16px 0;
+      padding: 14px 0;
       backdrop-filter: blur(14px);
       position: sticky;
       top: 0;
@@ -97,16 +96,16 @@
     .brand-mark {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       letter-spacing: -0.01em;
     }
 
     .brand-glyph {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       background: var(--bg-surface-raised);
       border: 1px solid var(--border-strong);
       border-radius: 6px;
@@ -122,7 +121,7 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
       color: var(--text-muted);
     }
@@ -135,12 +134,12 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 999px;
       background: var(--bg-surface-raised);
       border: 1px solid var(--border);
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       transition: all 0.15s ease;
     }
@@ -152,7 +151,7 @@
 
     /* Hero Section */
     .hero {
-      padding: 85px 0 50px;
+      padding: 60px 0 36px;
       text-align: center;
       position: relative;
     }
@@ -161,14 +160,15 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 14px 5px 8px;
+      padding: 5px 14px;
       border-radius: 999px;
       background: rgba(16, 185, 129, 0.08);
       border: 1px solid rgba(16, 185, 129, 0.25);
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: #6ee7b7;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      max-width: 90%;
     }
 
     .status-dot {
@@ -177,21 +177,16 @@
       border-radius: 50%;
       background: var(--accent);
       box-shadow: 0 0 8px var(--accent);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
+      flex-shrink: 0;
     }
 
     .hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(2.4rem, 5.2vw, 4.1rem);
+      font-size: clamp(2.2rem, 4.8vw, 3.6rem);
       font-weight: 800;
-      line-height: 1.12;
+      line-height: 1.15;
       letter-spacing: -0.035em;
-      margin-bottom: 22px;
+      margin-bottom: 16px;
       color: #fff;
     }
 
@@ -201,10 +196,10 @@
     }
 
     .hero-sub {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
-      max-width: 660px;
-      margin: 0 auto 36px;
+      max-width: 620px;
+      margin: 0 auto 30px;
       font-weight: 400;
       line-height: 1.6;
     }
@@ -213,8 +208,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 30px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .cta-button-cluster {
@@ -228,15 +223,15 @@
     .btn-download {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
       background: #f0f2f5;
       color: #090a0d;
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 0.95rem;
-      padding: 13px 26px;
+      font-size: 0.92rem;
+      padding: 12px 24px;
       border-radius: var(--radius);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.4), 0 12px 24px -6px rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.4), 0 10px 20px -5px rgba(0,0,0,0.5);
       transition: all 0.15s ease;
       cursor: pointer;
     }
@@ -244,19 +239,19 @@
     .btn-download:hover {
       background: #ffffff;
       transform: translateY(-1px);
-      box-shadow: 0 0 0 1px #fff, 0 16px 32px -8px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 0 1px #fff, 0 14px 28px -6px rgba(16, 185, 129, 0.3);
     }
 
     .btn-secondary {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       background: var(--bg-surface-raised);
       color: var(--text);
       font-family: var(--font-body);
       font-weight: 500;
-      font-size: 0.9rem;
-      padding: 13px 20px;
+      font-size: 0.88rem;
+      padding: 12px 18px;
       border-radius: var(--radius);
       border: 1px solid var(--border);
       transition: all 0.15s ease;
@@ -269,39 +264,39 @@
 
     .release-meta {
       font-family: var(--font-mono);
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: var(--text-faint);
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
       justify-content: center;
     }
 
-    /* Interactive Live Workbench Simulator */
+    /* Interactive Live Workbench */
     .workbench-wrap {
-      margin: 30px 0 80px;
+      margin: 24px 0 50px;
       position: relative;
     }
 
     .corner-cross {
       position: absolute;
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-faint);
       pointer-events: none;
       z-index: 10;
     }
-    .cross-tl { top: -10px; left: -10px; }
-    .cross-tr { top: -10px; right: -10px; }
-    .cross-bl { bottom: -10px; left: -10px; }
-    .cross-br { bottom: -10px; right: -10px; }
+    .cross-tl { top: -8px; left: -8px; }
+    .cross-tr { top: -8px; right: -8px; }
+    .cross-bl { bottom: -8px; left: -8px; }
+    .cross-br { bottom: -8px; right: -8px; }
 
     .workbench {
       background: var(--bg-surface);
       border: 1px solid var(--border-strong);
-      border-radius: 12px;
-      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04);
       overflow: hidden;
     }
 
@@ -309,29 +304,29 @@
     .win-header {
       background: #0d0f15;
       border-bottom: 1px solid var(--border);
-      padding: 12px 18px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
 
     .win-controls {
       display: flex;
-      gap: 7px;
+      gap: 6px;
     }
 
     .win-dot {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: #232733;
     }
 
     .win-title {
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       display: flex;
       align-items: center;
@@ -340,9 +335,9 @@
 
     .win-tabs {
       display: flex;
-      gap: 4px;
+      gap: 3px;
       background: var(--bg);
-      padding: 3px;
+      padding: 2px;
       border-radius: 6px;
       border: 1px solid var(--border);
       overflow-x: auto;
@@ -353,8 +348,8 @@
       border: none;
       color: var(--text-muted);
       font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 5px 11px;
+      font-size: 0.7rem;
+      padding: 4px 9px;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.1s ease;
@@ -371,28 +366,27 @@
     /* Workbench Body */
     .workbench-body {
       display: grid;
-      grid-template-columns: 340px 1fr;
-      min-height: 420px;
+      grid-template-columns: 310px 1fr;
+      min-height: 360px;
       background: #0b0d13;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 820px) {
       .workbench-body { grid-template-columns: 1fr; }
     }
 
-    /* Left: Queue & Inspect Pane */
     .pane-left {
       border-right: 1px solid var(--border);
-      padding: 20px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       background: #0d1017;
     }
 
     .pane-header-title {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-faint);
@@ -405,11 +399,10 @@
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.15s ease;
     }
 
     .file-item-card.active {
@@ -420,14 +413,14 @@
     .file-details {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .ext-badge {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      padding: 2px 6px;
+      padding: 2px 5px;
       border-radius: 4px;
       background: #1e2230;
       color: #93c5fd;
@@ -439,37 +432,36 @@
     .ext-badge.pptx { background: rgba(249, 115, 22, 0.15); color: #fdba74; }
 
     .file-name {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 500;
       color: var(--text);
     }
 
     .file-meta {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
     }
 
     .file-status-badge {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #34d399;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
-    /* Live Pipeline Toggles */
     .pipeline-toggles {
       background: var(--bg-surface-raised);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 12px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
     }
 
     .toggle-row {
@@ -484,33 +476,8 @@
       font-weight: 600;
     }
 
-    .btn-convert-trigger {
-      width: 100%;
-      background: var(--bg-surface-raised);
-      border: 1px solid var(--border-strong);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-    }
-
-    .btn-convert-trigger:hover {
-      background: var(--bg-surface-active);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    /* Right: Markdown Stream Preview */
     .pane-right {
-      padding: 20px;
+      padding: 16px;
       background: #090a0e;
       display: flex;
       flex-direction: column;
@@ -520,16 +487,15 @@
 
     .md-code-box {
       font-family: var(--font-mono);
-      font-size: 0.78rem;
-      line-height: 1.7;
+      font-size: 0.75rem;
+      line-height: 1.65;
       color: #d1d5db;
       overflow-x: auto;
       white-space: pre;
-      min-height: 280px;
+      min-height: 240px;
     }
 
     .md-code-box .token-h { color: #f43f5e; font-weight: 600; }
-    .md-code-box .token-link { color: #38bdf8; }
     .md-code-box .token-table { color: #34d399; }
     .md-code-box .token-math { color: #fbbf24; }
     .md-code-box .token-meta { color: #6b7280; font-style: italic; }
@@ -538,9 +504,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 14px;
+      padding-top: 10px;
       border-top: 1px solid var(--border);
-      margin-top: 16px;
+      margin-top: 12px;
     }
 
     .btn-copy {
@@ -548,13 +514,13 @@
       border: 1px solid var(--border-strong);
       color: var(--text);
       font-family: var(--font-mono);
-      font-size: 0.75rem;
-      padding: 6px 14px;
+      font-size: 0.72rem;
+      padding: 5px 11px;
       border-radius: 4px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.15s ease;
     }
 
@@ -563,197 +529,49 @@
       color: #fff;
     }
 
-    /* Core Principles (No BS Grid) */
-    .section-divider {
-      border: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
-      margin: 80px 0;
-    }
-
-    .section-title-wrap {
-      text-align: center;
+    /* Condensed Specs & Notes */
+    .condensed-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
       margin-bottom: 40px;
     }
 
-    .section-title-wrap h2 {
-      font-family: var(--font-display);
-      font-size: 1.9rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-
-    .section-title-wrap p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 80px;
-    }
-
-    .spec-cell {
-      background: var(--bg-surface);
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: background 0.15s ease;
-    }
-
-    .spec-cell:hover {
-      background: #131720;
-    }
-
-    .spec-glyph {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--accent);
-      margin-bottom: 16px;
-      letter-spacing: 0.05em;
-    }
-
-    .spec-cell h3 {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .spec-cell p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* Engine Comparison / Format Matrix */
-    .formats-matrix {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px;
-      margin-bottom: 80px;
-    }
-
-    .matrix-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-      margin-top: 16px;
-    }
-
-    .matrix-table th {
-      text-align: left;
-      padding: 10px 14px;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-faint);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .matrix-table td {
-      padding: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      color: var(--text-muted);
-    }
-
-    .matrix-table tr:hover td {
-      background: rgba(255, 255, 255, 0.015);
-      color: var(--text);
-    }
-
-    .matrix-table td.primary {
-      font-family: var(--font-mono);
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .tag-engine {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 2px 7px;
-      border-radius: 4px;
-      background: var(--bg-surface-raised);
-      border: 1px solid var(--border);
-      color: #94a3b8;
-    }
-
-    /* FAQ Section */
-    .faq-section {
-      margin-bottom: 80px;
-    }
-
-    .faq-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 768px) {
-      .faq-grid { grid-template-columns: 1fr; }
-    }
-
-    .faq-card {
+    .feature-pill-card {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 24px;
+      padding: 16px;
     }
 
-    .faq-card h4 {
+    .feature-pill-card .pill-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .feature-pill-card h4 {
       font-family: var(--font-display);
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .faq-card p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* License & Architecture Footer Note */
-    .open-source-banner {
-      background: linear-gradient(180deg, var(--bg-surface) 0%, #090a0e 100%);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 36px;
-      text-align: center;
-      margin-bottom: 80px;
-    }
-
-    .open-source-banner h3 {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      margin-bottom: 10px;
-    }
-
-    .open-source-banner p {
-      max-width: 600px;
-      margin: 0 auto 20px;
       font-size: 0.92rem;
-      color: var(--text-muted);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
     }
 
-    /* Simple Footer */
+    .feature-pill-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      padding: 36px 0;
+      padding: 28px 0;
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-faint);
     }
 
@@ -762,12 +580,12 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 12px;
     }
 
     .footer-links a {
       color: var(--text-muted);
-      margin-left: 20px;
+      margin-left: 16px;
     }
 
     .footer-links a:hover {
@@ -782,13 +600,13 @@
     <div class="container top-bar-inner">
       <a href="index.html" class="brand-mark">
         <div class="brand-glyph">MD</div>
-        <span>Sombrero / DesktopMarkdownConverter</span>
+        <span>Sombrero / Green Room Workbench</span>
       </a>
 
       <div class="nav-actions">
-        <a href="index.html">← Back to Hub</a>
+        <a href="index.html">← Back to Sombrero</a>
         <a href="https://github.com/velocity1977/markdownconverter" target="_blank" rel="noopener" class="pill-link">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
           velocity1977/markdownconverter
         </a>
       </div>
@@ -796,27 +614,27 @@
   </header>
 
   <main class="container">
-    <!-- Refined Hero Section -->
+    <!-- Hero Section -->
     <section class="hero">
       <div class="hero-eyebrow">
         <span class="status-dot"></span>
-        <span>STANDALONE WINDOWS UTILITY • ZERO CLOUD TELEMETRY</span>
+        <span>While the band is still tuning up, here's a riff worked out in the green room.</span>
       </div>
 
       <h1>
-        The missing document-to-Markdown<br>
-        <span class="dim">engine for Windows.</span>
+        Documents in.<br>
+        <span class="dim">Pristine Markdown out.</span>
       </h1>
 
       <p class="hero-sub">
-        Feed it locked PDFs, Word docs, slide decks, and spreadsheets. It parses layouts, extracts figures into local asset folders, repairs broken math glyphs, and hands you pristine Markdown ready for LLMs or Obsidian — 100% offline.
+        A free, standalone Windows utility. Feed it locked PDFs, Word docs, slide decks, and spreadsheets — it parses layouts, extracts images to local asset folders, repairs math glyphs, and gives you clean Markdown with zero cloud telemetry.
       </p>
 
       <div class="hero-cta">
         <div class="cta-button-cluster">
-          <!-- OFFICIAL GITHUB V1.0 DIRECT RELEASE DOWNLOAD -->
+          <!-- DIRECT GITHUB V1.0 DOWNLOAD -->
           <a href="https://github.com/velocity1977/markdownconverter/releases/download/V1.0/DesktopMarkdownConverter.exe" id="downloadBtn" class="btn-download" download>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -830,16 +648,16 @@
         </div>
 
         <div class="release-meta">
-          <span>x64 Architecture</span>
-          <span>•</span>
-          <span>Windows 10 / 11</span>
+          <span>x64 Windows 10 / 11</span>
           <span>•</span>
           <span>v1.0 Standalone (~22.6 MB)</span>
+          <span>•</span>
+          <span>Open Source (AGPLv3)</span>
         </div>
       </div>
     </section>
 
-    <!-- Interactive Live Workbench Demonstration -->
+    <!-- Interactive Live Workbench -->
     <div class="workbench-wrap">
       <div class="corner-cross cross-tl">+</div>
       <div class="corner-cross cross-tr">+</div>
@@ -847,7 +665,6 @@
       <div class="corner-cross cross-br">+</div>
 
       <div class="workbench">
-        <!-- Window Chrome -->
         <div class="win-header">
           <div class="win-controls">
             <div class="win-dot"></div>
@@ -856,7 +673,7 @@
           </div>
           <div class="win-title">
             <span>DesktopMarkdownConverter.exe</span>
-            <span style="color:var(--text-faint)">— [Active Conversion Pipeline]</span>
+            <span style="color:var(--text-faint)">— [Sample Outputs]</span>
           </div>
           <div class="win-tabs">
             <button class="tab-btn active" onclick="switchSample('pdf')">Financial_Q3.pdf</button>
@@ -866,16 +683,14 @@
           </div>
         </div>
 
-        <!-- Workbench Body -->
         <div class="workbench-body">
-          <!-- Left: Input Queue & Options -->
           <div class="pane-left">
             <div class="pane-header-title">
               <span>Conversion Queue</span>
-              <span id="queueCount">4 Files Loaded</span>
+              <span>4 Loaded</span>
             </div>
 
-            <div class="file-item-card active" id="activeFileCard">
+            <div class="file-item-card active">
               <div class="file-details">
                 <span class="ext-badge pdf" id="fileExtBadge">PDF</span>
                 <div>
@@ -884,7 +699,7 @@
                 </div>
               </div>
               <div class="file-status-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 <span>Ready</span>
               </div>
             </div>
@@ -899,30 +714,24 @@
                 <span class="on">[✓] PUA → UTF-8</span>
               </div>
               <div class="toggle-row">
-                <span>Engine:</span>
+                <span>Parsing Engine:</span>
                 <span class="on" id="activeEngineLabel">pymupdf4llm</span>
               </div>
               <div class="toggle-row">
-                <span>Network:</span>
-                <span style="color:#ef4444;font-weight:600">0.0 KB (Airgapped)</span>
+                <span>Telemetry:</span>
+                <span style="color:#10b981;font-weight:600">0.0 KB (100% Offline)</span>
               </div>
             </div>
 
-            <button class="btn-convert-trigger" onclick="simulateConvert()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              <span id="convertBtnLabel">Re-Run Conversion</span>
-            </button>
-
-            <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint); margin-top:auto;">
+            <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text-faint); margin-top:auto;">
               Target: <span style="color:var(--text-muted)">./Converted_Markdown/</span>
             </div>
           </div>
 
-          <!-- Right: Real Markdown Preview Stream -->
           <div class="pane-right">
             <div class="pane-header-title">
-              <span>Generated Markdown Stream</span>
-              <span style="color:var(--accent)" id="fidelityBadge">100% Structural Fidelity</span>
+              <span>Markdown Output Stream</span>
+              <span style="color:var(--accent)">Structured &amp; Clean</span>
             </div>
 
             <div class="md-code-box" id="mdOutput">
@@ -945,11 +754,11 @@ Legacy symbol font equations successfully normalized:
             </div>
 
             <div class="pane-footer">
-              <span style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);" id="tokenEstimate">
+              <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text-faint);" id="tokenEstimate">
                 ~284 tokens • 4 tables extracted
               </span>
               <button class="btn-copy" onclick="copySnippet()">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 <span id="copyBtnText">Copy Markdown</span>
               </button>
             </div>
@@ -958,152 +767,31 @@ Legacy symbol font equations successfully normalized:
       </div>
     </div>
 
-    <!-- Core Specs Grid (No Fluff) -->
-    <div class="section-title-wrap">
-      <h2>Engineering Principles</h2>
-      <p>Built for users who care about data isolation, layout fidelity, and deterministic output.</p>
-    </div>
-
-    <div class="specs-grid">
-      <div class="spec-cell">
-        <div>
-          <div class="spec-glyph">01 / AIRGAPPED INTEGRITY</div>
-          <h3>Zero Network Footprint</h3>
-          <p>Operates in complete offline isolation. No phone-home telemetry, no remote API calls, and zero bytes uploaded to third-party cloud infrastructure.</p>
-        </div>
+    <!-- Condensed Technical Highlights -->
+    <div class="condensed-strip">
+      <div class="feature-pill-card">
+        <div class="pill-tag">01 / LOCAL PRIVACY</div>
+        <h4>100% Offline Isolation</h4>
+        <p>Runs entirely on local CPU. Zero outbound network traffic or data telemetry.</p>
       </div>
 
-      <div class="spec-cell">
-        <div>
-          <div class="spec-glyph">02 / ASSET DECOUPLING</div>
-          <h3>Figure &amp; Image Isolation</h3>
-          <p>Embedded vectors and raster bitmaps in PDFs, Word docs, and PowerPoint slides are extracted directly into a sibling <code>_assets</code> folder and automatically linked.</p>
-        </div>
+      <div class="feature-pill-card">
+        <div class="pill-tag">02 / ASSET PIPELINE</div>
+        <h4>Image &amp; Figure Extraction</h4>
+        <p>Extracts graphics from PDFs, Word docs, and slides into a dedicated <code>_assets</code> folder.</p>
       </div>
 
-      <div class="spec-cell">
-        <div>
-          <div class="spec-glyph">03 / HEURISTIC REPAIR</div>
-          <h3>Symbol Font Normalization</h3>
-          <p>Translates legacy PDF Private-Use-Area (PUA) symbol glyphs (e.g. angle marks, Greek letters, math operators) into compliant UTF-8 characters.</p>
-        </div>
+      <div class="feature-pill-card">
+        <div class="pill-tag">03 / ENGINES &amp; SPECS</div>
+        <h4>pymupdf4llm + markitdown</h4>
+        <p>High-fidelity PDF &amp; Office parsing. Encrypted PDF support &amp; math symbol normalization.</p>
       </div>
 
-      <div class="spec-cell">
-        <div>
-          <div class="spec-glyph">04 / ASYNC WORKERS</div>
-          <h3>Folder &amp; Queue Processing</h3>
-          <p>Queue hundreds of documents or point directly at recursive directory trees. PyQt6 background QThread workers keep the interface fluid and responsive.</p>
-        </div>
+      <div class="feature-pill-card">
+        <div class="pill-tag">04 / OPEN SOURCE</div>
+        <h4>AGPL-3.0 Compliance</h4>
+        <p>Complete source code, PyInstaller specs, and Inno Setup files are publicly hosted on GitHub.</p>
       </div>
-
-      <div class="spec-cell">
-        <div>
-          <div class="spec-glyph">05 / BATCH DECRYPTION</div>
-          <h3>Password-Protected PDFs</h3>
-          <p>Supply a session passphrase to decrypt and convert password-secured documents across your entire queue in a single unattended pass.</p>
-        </div>
-      </div>
-
-      <div class="spec-cell">
-        <div>
-          <div class="spec-glyph">06 / DESKTOP NATIVE</div>
-          <h3>OS Theme Synchronization</h3>
-          <p>Queries Windows DWM and Registry personalization APIs at startup to seamlessly match your system Light or Dark mode with native title bar tinting.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Format Engine Matrix -->
-    <section class="formats-matrix">
-      <div class="section-title-wrap" style="text-align: left; margin-bottom: 16px;">
-        <h2>Underlying Parsing Runtime</h2>
-        <p>Composing battle-tested document engines for maximum layout accuracy.</p>
-      </div>
-
-      <table class="matrix-table">
-        <thead>
-          <tr>
-            <th>Format</th>
-            <th>Extensions</th>
-            <th>Engine</th>
-            <th>Extraction Capabilities</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="primary">Adobe Portable Document</td>
-            <td><code>.pdf</code></td>
-            <td><span class="tag-engine">pymupdf4llm</span></td>
-            <td>Text hierarchy, multi-column tables, vector graphics, image assets, symbol repair</td>
-          </tr>
-          <tr>
-            <td class="primary">Microsoft Word</td>
-            <td><code>.docx</code></td>
-            <td><span class="tag-engine">microsoft/markitdown</span></td>
-            <td>Headings, inline code, nested tables, embedded media, lists</td>
-          </tr>
-          <tr>
-            <td class="primary">Microsoft PowerPoint</td>
-            <td><code>.pptx</code></td>
-            <td><span class="tag-engine">microsoft/markitdown</span></td>
-            <td>Slide structures, speaker notes, extracted shapes &amp; diagrams</td>
-          </tr>
-          <tr>
-            <td class="primary">Microsoft Excel</td>
-            <td><code>.xlsx</code></td>
-            <td><span class="tag-engine">microsoft/markitdown</span></td>
-            <td>Worksheet tables, formatted cell grids, CSV tabular conversion</td>
-          </tr>
-          <tr>
-            <td class="primary">Web &amp; Structured Data</td>
-            <td><code>.html</code>, <code>.csv</code>, <code>.json</code>, <code>.xml</code>, <code>.txt</code></td>
-            <td><span class="tag-engine">markitdown + native</span></td>
-            <td>DOM cleaning, JSON code blocks, tabular markdown tables</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Technical FAQ -->
-    <section class="faq-section">
-      <div class="section-title-wrap">
-        <h2>Frequently Asked Questions</h2>
-        <p>Straightforward answers about licensing, security, and formats.</p>
-      </div>
-
-      <div class="faq-grid">
-        <div class="faq-card">
-          <h4>Does any document data leave my machine?</h4>
-          <p>No. Conversions run 100% locally on your CPU using bundled Python parsing runtimes. The application has zero outbound network requests and no analytics telemetry.</p>
-        </div>
-
-        <div class="faq-card">
-          <h4>Where do extracted images get saved?</h4>
-          <p>When "Extract Figures" is enabled, graphics and photos are saved in a subfolder named <code>&lt;filename&gt;_assets/</code> alongside your generated <code>.md</code> file.</p>
-        </div>
-
-        <div class="faq-card">
-          <h4>How does it handle password-protected PDFs?</h4>
-          <p>Enter the passphrase into the "PDF Password" input in the application before clicking convert. The engine will attempt unlocking each encrypted file in your batch.</p>
-        </div>
-
-        <div class="faq-card">
-          <h4>Why is this open-sourced under AGPL-3.0?</h4>
-          <p>The PDF conversion backend utilizes <code>pymupdf4llm</code> (and underlying <code>PyMuPDF</code>), which is licensed under GNU AGPLv3. We fully open-source our codebase in strict compliance.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- AGPLv3 Notice Banner -->
-    <div class="open-source-banner">
-      <h3>Strict AGPL-3.0 Open Source Compliance</h3>
-      <p>
-        Desktop Markdown Converter is free and open source. Full source code, PyInstaller specs, and Inno Setup build configurations are publicly available.
-      </p>
-      <a href="https://github.com/velocity1977/markdownconverter" target="_blank" rel="noopener" class="pill-link">
-        Browse Source Code on GitHub →
-      </a>
     </div>
   </main>
 
@@ -1111,11 +799,11 @@ Legacy symbol font equations successfully normalized:
   <footer>
     <div class="container footer-inner">
       <div>
-        <span>Sombrero</span> / <span>DesktopMarkdownConverter</span> • 2026
+        <span>Sombrero</span> / <span>Green Room Workbench</span> • 2026
       </div>
       <div class="footer-links">
-        <a href="index.html">Sombrero Home</a>
-        <a href="https://github.com/velocity1977/markdownconverter" target="_blank" rel="noopener">GitHub Repository</a>
+        <a href="index.html">← Sombrero Story</a>
+        <a href="https://github.com/velocity1977/markdownconverter" target="_blank" rel="noopener">GitHub Repo</a>
         <a href="https://github.com/velocity1977/markdownconverter/blob/main/LICENSE" target="_blank" rel="noopener">AGPLv3 License</a>
       </div>
     </div>
@@ -1208,10 +896,7 @@ pub async fn ingest_event(payload: Chunk) -> Result<Ack, StorageError> {
       }
     };
 
-    let currentSample = 'pdf';
-
     function switchSample(type) {
-      currentSample = type;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
 
@@ -1227,27 +912,13 @@ pub async fn ingest_event(payload: Chunk) -> Result<Ack, StorageError> {
       document.getElementById('tokenEstimate').textContent = data.tokens;
     }
 
-    function simulateConvert() {
-      const btn = document.getElementById('convertBtnLabel');
-      const box = document.getElementById('mdOutput');
-      const oldCode = box.innerHTML;
-      
-      btn.textContent = 'Processing Pipeline...';
-      box.style.opacity = '0.3';
-      
-      setTimeout(() => {
-        box.style.opacity = '1';
-        btn.textContent = 'Re-Run Conversion';
-      }, 350);
-    }
-
     function copySnippet() {
       const codeElement = document.getElementById('mdOutput');
       const textToCopy = codeElement.innerText;
       
       navigator.clipboard.writeText(textToCopy).then(() => {
         const btnText = document.getElementById('copyBtnText');
-        btnText.textContent = 'Copied to Clipboard!';
+        btnText.textContent = 'Copied!';
         setTimeout(() => {
           btnText.textContent = 'Copy Markdown';
         }, 2000);
